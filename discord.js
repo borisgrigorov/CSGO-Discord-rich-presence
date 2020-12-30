@@ -99,17 +99,36 @@ module.exports = class Discord {
     }
   }
 
-  betterMapName(text){
+  betterMapName(text) {
     text = text.replace(text.substring(0, 3), "");
-    text = text.charAt(0).toUpperCase() + text.slice(1);
+    text = this.firstToUpperCase(text);
     return text;
+  }
+
+  firstToUpperCase(text) {
+    return (text = text.charAt(0).toUpperCase() + text.slice(1));
   }
 
   activityModificationByGameMode(activity, data) {
     if (data.player.activity == "playing") {
       if (data.map.mode == "survival") {
-        activity.details = "Danger zone - " +  this.getGamePhase(data);
+        activity.details = "Danger zone - " + this.getGamePhase(data);
         activity.state = this.betterMapName(data.map.name);
+      } else if (
+        data.map.mode == "deathmatch" ||
+        data.map.mode == "casual" ||
+        data.map.mode == "demolition" ||
+        data.map.mode == "gungametrbomb" ||
+        data.map.mode == "gungameprogressive"
+      ) {
+        activity.details = this.firstToUpperCase(
+          this.getGameMode(data.map.mode)
+        );
+        activity.state =
+          "Kills: " +
+          data.player.match_stats.kills +
+          " | Score: " +
+          data.player.match_stats.score;
       }
     }
     return activity;
