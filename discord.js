@@ -1,5 +1,7 @@
 const DiscordRPC = require("discord-rpc");
 const config = require("./config.json");
+const request = require("request");
+const childProcess = require("child_process");
 module.exports = class Discord {
   constructor(clientId) {
     this.clientId = clientId;
@@ -14,6 +16,18 @@ module.exports = class Discord {
     });
     var clientId = this.clientId;
     await this.client.login({ clientId });
+
+    this.client.subscribe("ACTIVITY_JOIN", data => {
+      try{
+        data = Buffer.from(data.secret, "hex").toString("utf8").split("_");
+        var startCommand = process.platform == "win32" ? "start" : "xdg-open";
+        childProcess.exec(startCommand + " \"steam://joinlobby/730/" + data[1] + "/" + data[0] + "\"");
+      }
+      catch(e){
+        console("Could not connect to lobby");
+      }
+    });
+
     this.loggedIn = true;
   }
 
@@ -27,7 +41,25 @@ module.exports = class Discord {
       startTimestamp: this.client.connectTime,
     };
     if (data.activity == "menu") {
-      activity.state = "In menu";
+      var lobbyid = await this.getSteamLobbyId(
+        "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=" +
+          config.steamWebAPIKey +
+          "&steamids=" +
+          data.game.provider.steamid
+      );
+      if (lobbyid == "-") {
+        activity.state = "In menu";
+      } else {
+        activity.state = "In lobby";
+        activity.partyId = lobbyid;
+        activity.partySize = 1;
+        activity.partyMax = 5;
+        activity.joinSecret = Buffer.from(
+          data.game.provider.steamId + "_" + lobbyid
+        )
+          .toString("hex")
+          .toUpperCase();
+      }
       activity.largeImageKey = "menu";
       activity.largeImageText = "Main Menu";
     } else if (data.activity == "playing") {
@@ -41,6 +73,20 @@ module.exports = class Discord {
     }
     activity = this.activityModificationByGameMode(activity, data.game);
     await this.client.setActivity(activity, data.pid);
+  }
+
+  async getSteamLobbyId(url) {
+    return new Promise((resolve, rej) => {
+      request(url, { json: true },(err, res, body) => {
+        if (body.response.players[0].lobbysteamid != null) {
+          resolve(body.response.players[0].lobbysteamid);
+          return;
+        } else {
+          resolve("-");
+          return;
+        }
+      });
+    });
   }
 
   getGameMode(name) {

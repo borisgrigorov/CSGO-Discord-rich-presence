@@ -30,7 +30,7 @@ module.exports = class CSGO {
   }
 
   async getProccesPid() {
-    findProcess("name", "csgo_linux64").then(async (list) => {
+    findProcess("name", process.platform == "win32" ? "csgo.exe" : "csgo_linux64").then(async (list) => {
       if (list.length == 0) {
         if (config.richOutput) console.log("CSGO is not running");
         this.isCsgoRunning = false;

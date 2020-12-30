@@ -7,7 +7,7 @@ const csgo = new CSGO();
 
 server = http.createServer(function (req, res) {
   if (req.method == "POST") {
-    if(config.richOutput) console.log("Data received...");
+    if (config.richOutput) console.log("Data received...");
     res.writeHead(200, { "Content-Type": "text/html" });
     var body = "";
     req.on("data", function (data) {
