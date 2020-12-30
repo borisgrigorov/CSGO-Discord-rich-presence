@@ -1,4 +1,5 @@
 const DiscordRPC = require("discord-rpc");
+const config = require("./config.json");
 module.exports = class Discord {
   constructor(clientId) {
     this.clientId = clientId;
@@ -9,7 +10,7 @@ module.exports = class Discord {
     this.client = new DiscordRPC.Client({ transport: "ipc" });
 
     this.client.on("ready", () => {
-      console.log("Connected to discord");
+      if(config.richOutput) console.log("Connected to discord");
     });
     var clientId = this.clientId;
     await this.client.login({ clientId });
@@ -17,6 +18,7 @@ module.exports = class Discord {
   }
 
   async clearActivity(pid){
+    if(config.richOutput) console.log("Activity cleared");
     await this.client.clearActivity(pid);
   }
 

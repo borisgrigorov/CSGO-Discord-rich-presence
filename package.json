@@ -2,11 +2,19 @@
   "name": "csgo-rich-presence",
   "version": "1.0.0",
   "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/borisgrigorov/CSGO-Discord-rich-presence"
+  },
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
-  "author": "Boris Grigorov",
+  "author": {
+    "name": "Boris Grigorov",
+    "email": "boris.grigorov26@gmail.com",
+    "url": "https://vvveb.cz"
+  },
   "license": "ISC",
   "dependencies": {
     "discord-rpc": "^3.1.4",
