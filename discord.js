@@ -33,14 +33,13 @@ module.exports = class Discord {
     } else if (data.activity == "playing") {
       activity.state = this.getTeam(data.game);
       activity.details =
-        this.getGamePhase(data.game) +
-        " " +
-        this.getCurrentPoints(data.game);
+        this.getGamePhase(data.game) + " " + this.getCurrentPoints(data.game);
       activity.largeImageKey = data.game.map.name;
-      activity.largeImageText = data.game.map.name;
+      activity.largeImageText = this.betterMapName(data.game.map.name);
       activity.smallImageKey = data.game.map.mode;
       activity.smallImageText = this.getGameMode(data.game.map.mode);
     }
+    activity = this.activityModificationByGameMode(activity, data.game);
     await this.client.setActivity(activity, data.pid);
   }
 
@@ -72,12 +71,10 @@ module.exports = class Discord {
   }
 
   getTeam(data) {
-    if (data.map.mode == "survival") {
-      return "";
-    } else if (data.player.team == "CT") {
-      return "Team Counter-Terrorists";
+    if (data.player.team == "CT") {
+      return "Playing as Counter-Terrorists";
     } else if (data.player.team == "T") {
-      return "Team Terrorists";
+      return "Playing as Terrorists";
     }
   }
 
@@ -100,5 +97,21 @@ module.exports = class Discord {
       default:
         return data.map.phase;
     }
+  }
+
+  betterMapName(text){
+    text = text.replace(text.substring(0, 3), "");
+    text = text.charAt(0).toUpperCase() + text.slice(1);
+    return text;
+  }
+
+  activityModificationByGameMode(activity, data) {
+    if (data.player.activity == "playing") {
+      if (data.map.mode == "survival") {
+        activity.details = "Danger zone - " +  this.getGamePhase(data);
+        activity.state = this.betterMapName(data.map.name);
+      }
+    }
+    return activity;
   }
 };
