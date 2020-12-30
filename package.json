@@ -8,7 +8,8 @@
   },
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "build": "pkg index.js --targets node10-linux,node10-win --out-path build"
   },
   "author": {
     "name": "Boris Grigorov",
