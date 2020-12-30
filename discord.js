@@ -16,6 +16,10 @@ module.exports = class Discord {
     this.loggedIn = true;
   }
 
+  async clearActivity(pid){
+    await this.client.clearActivity(pid);
+  }
+
   async setActivity(data) {
     var activity = {
       startTimestamp: this.client.connectTime,
@@ -39,6 +43,16 @@ module.exports = class Discord {
     switch (name) {
       case "scrimcomp2v2":
         return "Wingman";
+      case "casual":
+        return "Casual";
+      case "competitive":
+        return "Competitive";
+      case "deatchmatch":
+        return "Deatchmatch";
+      case "demolition":
+        return "Demolition";
+      case "demolitionshield":
+        return "Demolition";
     }
   }
 

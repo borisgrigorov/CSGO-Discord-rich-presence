@@ -22,6 +22,12 @@ server = http.createServer(function (req, res) {
   }
 });
 
+setInterval(async () => {
+  if(csgo.isCsgoRunning == false && discord.loggedIn){
+    await discord.clearActivity(csgo.pid);
+  }
+});
+
 async function onData(data) {
   data = JSON.parse(data);
   var activity = await csgo.onData(data);
