@@ -1,15 +1,19 @@
 {
   "name": "csgo-rich-presence",
   "version": "1.0.0",
-  "description": "",
+  "description": "Show current game status from CS:GO in Discord.",
   "repository": {
     "type": "git",
     "url": "https://github.com/borisgrigorov/CSGO-Discord-rich-presence"
   },
   "main": "index.js",
+  "os": [
+    "win32",
+    "linux"
+  ],
   "scripts": {
     "start": "node index.js",
-    "build": "pkg index.js --targets node10-linux,node10-win --out-path build"
+    "build": "pkg . --out-path build"
   },
   "author": {
     "name": "Boris Grigorov",
@@ -23,5 +27,22 @@
     "i": "^0.3.6",
     "npm": "^6.14.10",
     "request": "^2.88.2"
+  },
+  "bin": "index.js",
+  "pkg": {
+    "scripts": [
+      "index.js",
+      "csgo.js",
+      "discord.js",
+      "config.js"
+    ],
+    "assets": [
+      "./*"
+    ],
+    "targets": [
+      "node8-linux",
+      "node8-win"
+    ],
+    "out-path": "build"
   }
 }

@@ -6,6 +6,8 @@ module.exports = class Discord {
   constructor(clientId) {
     this.clientId = clientId;
     this.loggedIn = false;
+    this.activity = "";
+    this.activityStartTime = 0;
   }
 
   async login() {
@@ -17,14 +19,20 @@ module.exports = class Discord {
     var clientId = this.clientId;
     await this.client.login({ clientId });
 
-    this.client.subscribe("ACTIVITY_JOIN", data => {
-      try{
+    this.client.subscribe("ACTIVITY_JOIN", (data) => {
+      try {
         data = Buffer.from(data.secret, "hex").toString("utf8").split("_");
         var startCommand = process.platform == "win32" ? "start" : "xdg-open";
-        childProcess.exec(startCommand + " \"steam://joinlobby/730/" + data[1] + "/" + data[0] + "\"");
-      }
-      catch(e){
-        console("Could not connect to lobby");
+        childProcess.exec(
+          startCommand +
+            ' "" "steam://joinlobby/730/' +
+            data[1] +
+            "/" +
+            data[0] +
+            '"'
+        );
+      } catch (e) {
+        console.log("Could not connect to lobby");
       }
     });
 
@@ -37,16 +45,27 @@ module.exports = class Discord {
   }
 
   async setActivity(data) {
-    var activity = {
-      startTimestamp: this.client.connectTime,
+    var activity = {};
+    if (data.activity != this.activity) {
+      this.activityStartTime = Math.round(Date.now() / 1000);
+      this.activity = data.activity;
+    }
+    activity = {
+      startTimestamp: this.activityStartTime,
     };
     if (data.activity == "menu") {
-      var lobbyid = await this.getSteamLobbyId(
-        "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=" +
-          config.steamWebAPIKey +
-          "&steamids=" +
-          data.game.provider.steamid
-      );
+      var lobbyid = "-";
+      if (data.steamApiKey != "") {
+        lobbyid = await this.getSteamLobbyId(
+          "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=" +
+            data.steamApiKey +
+            "&steamids=" +
+            data.game.provider.steamid
+        );
+      }
+      else{
+        lobbyid = "-";
+      }
       if (lobbyid == "-") {
         activity.state = "In menu";
       } else {
@@ -77,7 +96,7 @@ module.exports = class Discord {
 
   async getSteamLobbyId(url) {
     return new Promise((resolve, rej) => {
-      request(url, { json: true },(err, res, body) => {
+      request(url, { json: true }, (err, res, body) => {
         if (body.response.players[0].lobbysteamid != null) {
           resolve(body.response.players[0].lobbysteamid);
           return;

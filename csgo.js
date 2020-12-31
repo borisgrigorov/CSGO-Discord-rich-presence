@@ -1,12 +1,16 @@
 const findProcess = require("find-process");
 const config = require("./config.json");
+const Events = require("events");
 
-module.exports = class CSGO {
+module.exports = class CSGO extends (
+  Events
+) {
   constructor() {
+    super();
     this.isCsgoRunning = false;
-    setInterval(async () => {
-      await this.getProccesPid();
-    }, 5000);
+    setInterval(() => {
+      this.getProccesPid();
+    }, 3000);
   }
 
   getActivity(data) {
@@ -30,15 +34,23 @@ module.exports = class CSGO {
   }
 
   async getProccesPid() {
-    findProcess("name", process.platform == "win32" ? "csgo.exe" : "csgo_linux64").then(async (list) => {
+    findProcess(
+      "name",
+      process.platform == "win32" ? "csgo.exe" : "csgo_linux64"
+    ).then(async (list) => {
       if (list.length == 0) {
         if (config.richOutput) console.log("CSGO is not running");
-        this.isCsgoRunning = false;
-        return null;
+        if (this.isCsgoRunning != false) {
+          this.isCsgoRunning = false;
+          this.emit("stop");
+        }
+        return;
       } else {
         if (config.richOutput) console.log("CSGO is running");
-        this.isCsgoRunning = true;
-        return list[0].pid;
+        if (this.isCsgoRunning != true) {
+          this.isCsgoRunning = true;
+          this.emit("running");
+        }
       }
     });
   }
