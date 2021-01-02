@@ -18,13 +18,13 @@
 Supported platform are Windows and Linux.
 
 ### Linux
- 1. Download the newest release for linux and *gamestate_integration_discord.cfg* file
+ 1. Download the newest release for linux and *gamestate_integration_discord.cfg* file from [here](https://github.com/borisgrigorov/CSGO-Discord-rich-presence/releases)
  2. Move *gamestate_integration_discord.cfg* file to cfgs folder (usually */home/username/.local/share/Steam/steamapps/common/Counter-Strike Global Offensive/csgo/cfg*)
  3. Run the file (*csgo-rich-presence-linux*)
  4. Enjoy!
 
 ### Windows
- 1. Download the newest release for windows (*csgo-rich-presence-win.exe*) and *gamestate_integration_discord.cfg* file
+ 1. Download the newest release for windows (*csgo-rich-presence-win.exe*) and *gamestate_integration_discord.cfg* file from [here](https://github.com/borisgrigorov/CSGO-Discord-rich-presence/releases)
  2. Move *gamestate_integration_discord.cfg* file to cfgs folder (usually *C:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive\csgo\cfg*)
  3. Run the exe (*csgo-rich-presence-win.exe*)
  4. Enjoy!
