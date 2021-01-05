@@ -1,5 +1,5 @@
 const findProcess = require("find-process");
-const config = require("./config.json");
+const config = require("../config.json");
 const Events = require("events");
 
 module.exports = class CSGO extends (

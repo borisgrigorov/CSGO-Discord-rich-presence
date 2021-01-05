@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>CSGO Game info</title>
+        <link rel="stylesheet" href="/static/home.css" type="text/css" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <div class="home">
+            <img src="/static/header.png" class="logo" alt="Logos" />
+
+            <span class="apiinfo"
+                >If you want to use in-Discord invites, please enter your Steam
+                API key from
+                <a href="https://steamcommunity.com/dev/apikey"
+                    >https://steamcommunity.com/dev/apikey</a
+                >
+                for domain name type: <i>127.0.0.1</i>. If you do not want to
+                use it, you can close this tab.</span
+            >
+            <input
+                id="apiToken"
+                type="text"
+                autocapitalize="on"
+                autocomplete="off"
+                placeholder="API Key"
+                value="{{key}}"
+            />
+            <button id="sendToken">Save API Key</button><br />
+            <span id="text"></span>
+        </div>
+    </body>
+    <script>
+        var button = document.getElementById("sendToken");
+        var text = document.getElementById("text");
+        button.onclick = function () {
+            if (document.getElementById("apiToken").value.length == 32) {
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.onreadystatechange = function () {
+                    if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+                        text.innerHTML =
+                            "Successfuly saved! (You can close this tab)";
+                    } else {
+                        text.innerHTML =
+                            "Something went wrong while saving token.";
+                    }
+                };
+                xmlHttp.open("POST", "/saveKey", true);
+                xmlHttp.setRequestHeader("Content-Type", "application/json");
+                xmlHttp.send(
+                    JSON.stringify({
+                        key: document.getElementById("apiToken").value,
+                    })
+                );
+            }
+            else{
+                text.innerHTML =
+                            "Incorrect token!";
+            }
+        };
+    </script>
+</html>

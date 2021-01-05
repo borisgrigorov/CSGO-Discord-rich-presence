@@ -1,5 +1,5 @@
 const DiscordRPC = require("discord-rpc");
-const config = require("./config.json");
+const config = require("../config.json");
 const request = require("request");
 const childProcess = require("child_process");
 module.exports = class Discord {
@@ -17,7 +17,7 @@ module.exports = class Discord {
       if (config.richOutput) console.log("Connected to discord");
     });
     var clientId = this.clientId;
-    await this.client.login({ clientId });
+    await this.client.login({ clientId }).catch((e) => console.log("Error while connecting to Discord."));
 
     this.client.subscribe("ACTIVITY_JOIN", (data) => {
       try {
@@ -62,8 +62,7 @@ module.exports = class Discord {
             "&steamids=" +
             data.game.provider.steamid
         );
-      }
-      else{
+      } else {
         lobbyid = "-";
       }
       if (lobbyid == "-") {
