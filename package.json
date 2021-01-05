@@ -29,19 +29,15 @@
     "i": "^0.3.6",
     "mustache-express": "^1.3.0",
     "npm": "^6.14.10",
-    "pm2": "^4.5.1",
     "request": "^2.88.2"
   },
   "bin": "./src/index.js",
   "pkg": {
     "scripts": [
-      "./src/index.js",
-      "./src/csgo.js",
-      "./src/discord.js",
-      "./src/config.js"
+      "./src/*"
     ],
     "assets": [
-      "./*"
+      "./src/*"
     ],
     "targets": [
       "node8-linux",

@@ -1,6 +1,6 @@
 config.json
-node_modules
-tests
-build
+node_modules/
+tests/
+build/
 settings.json
 package-lock.json

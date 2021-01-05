@@ -9,24 +9,27 @@ const csgo = new CSGO();
 const cli = require("./cli");
 const path = require("path");
 const mustacheExpress = require("mustache-express");
-const bodyParser = require('body-parser');
-const fs = require('fs');
+const bodyParser = require("body-parser");
+const fs = require("fs");
 
 app.engine("html", mustacheExpress());
 app.set("view engine", "html");
 app.set("views", path.join(__dirname, "static/"));
-app.use("/static", express.static(path.join(__dirname, 'static')));
+app.use("/static", express.static(path.join(__dirname, "static")));
 
-var settings = fs.readFileSync("settings.json");
-settings = JSON.parse(settings);
+var steamApiKey = "";
 
-var steamApiKey = settings.steamApiKey || "";
+try {
+    var settings = fs.readFileSync("settings.json");
+    settings = JSON.parse(settings);
+    steamApiKey = settings.steamApiKey;
+} catch (e) {}
 
 server = http.createServer(app);
 
 app.get("/home", (req, res) => {
     res.render("home.html", {
-        key: steamApiKey
+        key: steamApiKey,
     });
 });
 app.get("/", (req, res) => {
@@ -34,15 +37,17 @@ app.get("/", (req, res) => {
 });
 
 app.post("/saveKey", bodyParser.json(), (req, res) => {
-    if(req.body != null && req.body.key != null && req.body.key.length == 32){
+    if (req.body != null && req.body.key != null && req.body.key.length == 32) {
         steamApiKey = req.body.key;
         res.status(200).end();
         cli.writeInfo();
-        fs.writeFileSync("settings.json", JSON.stringify({
-            "steamApiKey": steamApiKey
-        }));
-    }
-    else{
+        fs.writeFileSync(
+            "settings.json",
+            JSON.stringify({
+                steamApiKey: steamApiKey,
+            })
+        );
+    } else {
         res.status(400).end();
     }
 });
