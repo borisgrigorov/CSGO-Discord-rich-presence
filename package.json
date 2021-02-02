@@ -37,7 +37,7 @@
       "./src/*"
     ],
     "assets": [
-      "./src/*"
+      "./src/**/*"
     ],
     "targets": [
       "node8-linux",
