@@ -2,20 +2,14 @@ const config = require("../config.json");
 const Discord = require("./discord");
 const CSGO = require("./csgo");
 const express = require("express");
-const app = express();
+const expressApp = express();
 const http = require("http");
 const discord = new Discord(config.clientId);
 const csgo = new CSGO();
 const cli = require("./cli");
-const path = require("path");
-const mustacheExpress = require("mustache-express");
 const bodyParser = require("body-parser");
 const fs = require("fs");
-
-app.engine("html", mustacheExpress());
-app.set("view engine", "html");
-app.set("views", path.join(__dirname, "static/"));
-app.use("/static", express.static(path.join(__dirname, "static")));
+const { app, BrowserWindow, Menu, Tray } = require("electron");
 
 var steamApiKey = "";
 
@@ -25,18 +19,9 @@ try {
     steamApiKey = settings.steamApiKey;
 } catch (e) {}
 
-server = http.createServer(app);
+server = http.createServer(expressApp);
 
-app.get("/home", (req, res) => {
-    res.render("home.html", {
-        key: steamApiKey,
-    });
-});
-app.get("/", (req, res) => {
-    res.redirect("/home");
-});
-
-app.post("/saveKey", bodyParser.json(), (req, res) => {
+expressApp.post("/saveKey", bodyParser.json(), (req, res) => {
     if (req.body != null && req.body.key != null && req.body.key.length == 32) {
         steamApiKey = req.body.key;
         res.status(200).end();
@@ -52,7 +37,7 @@ app.post("/saveKey", bodyParser.json(), (req, res) => {
     }
 });
 
-app.post("/", (req, res) => {
+expressApp.post("/", (req, res) => {
     var body = "";
     if (config.richOutput) console.log("Data received...");
     req.on("data", (data) => {
@@ -89,7 +74,55 @@ async function onData(data) {
     }
 }
 
-cli.writeInfo(steamApiKey);
+/*cli.writeInfo(steamApiKey);
 if (steamApiKey.length != 32) {
     cli.getApiKey();
-}
+}*/
+
+app.on("ready", () => {
+    const icon = "./assets/logo.png";
+    const win = new BrowserWindow({
+        width: 900,
+        height: 700,
+        webPreferences: {
+            nodeIntegration: true,
+            devTools: true,
+        },
+        center: true,
+        minHeight: 550,
+        minWidth: 800,
+        title: "CS:GO Discord integration",
+        icon: icon,
+    });
+    win.removeMenu();
+    win.loadFile("./src/static/home.html");
+
+    win.on("minimize", (event) => {
+        event.preventDefault();
+        win.hide();
+    });
+
+    win.on("close", (event) => {
+        event.preventDefault();
+        win.hide();
+    });
+    var contextMenu = Menu.buildFromTemplate([
+        {
+            label: "Show",
+            click: () => win.show(),
+            role: "unhide",
+        },
+        {
+            label: "Close app",
+            click: () => {
+                //app.isQuiting = true;
+                console.log("Quitting...");
+                app.quit();
+            },
+            role: "quit",
+        },
+    ]);
+    var appIcon = new Tray(icon);
+    appIcon.setContextMenu(contextMenu);
+    appIcon.setTitle("CS:GO Discord integration");
+});

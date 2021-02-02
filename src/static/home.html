@@ -3,8 +3,8 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>CSGO Game info</title>
-        <link rel="stylesheet" href="/static/home.css" type="text/css" />
+        <title>CS:GO Discord integration</title>
+        <link rel="stylesheet" href="home.css" type="text/css" />
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link
             href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap"
@@ -13,7 +13,7 @@
     </head>
     <body>
         <div class="home">
-            <img src="/static/header.png" class="logo" alt="Logos" />
+            <img src="header.png" class="logo" alt="Logos" />
 
             <span class="apiinfo"
                 >If you want to use in-Discord invites, please enter your Steam
@@ -22,7 +22,7 @@
                     >https://steamcommunity.com/dev/apikey</a
                 >
                 for domain name type: <i>127.0.0.1</i>. If you do not want to
-                use it, you can close this tab.</span
+                use it, you can close this window.</span
             >
             <input
                 id="apiToken"
@@ -30,7 +30,7 @@
                 autocapitalize="on"
                 autocomplete="off"
                 placeholder="API Key"
-                value="{{key}}"
+                value=""
             />
             <button id="sendToken">Save API Key</button><br />
             <span id="text"></span>
