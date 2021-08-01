@@ -12,7 +12,7 @@
     "linux"
   ],
   "scripts": {
-    "start": "node index.js",
+    "start": "node .",
     "build": "pkg . --out-path build"
   },
   "author": {

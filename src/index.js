@@ -1,4 +1,10 @@
-const config = require("../config.json");
+var config;
+try {
+    config = require("../config.json");
+} catch (err) {
+    console.log("\x1b[31m", "Please create config.json.", "\x1b[0m",);
+    return;
+}
 const Discord = require("./discord");
 const CSGO = require("./csgo");
 const express = require("express");
