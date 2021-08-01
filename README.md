@@ -35,5 +35,15 @@ Supported platform are Windows and Linux.
 You have to have installed Nodejs and NPM.
  1. Clone repository
  2. Move *gamestate_integration_discord.cfg* to cfgs folder.
- 2. run `npm install`
- 3. run `npm start`
+ 3. Create `config.json` file in project root directory. That should looks like this:
+    ```json
+    {
+        "richOutput": false, 
+        "port": 3127,
+        "clientId": "793491189625913344",
+        "host": "127.0.0.1"
+    }
+    ```
+    Using this values should be fine, but you can use your own.
+ 4. run `npm install`
+ 5. run `npm start`
