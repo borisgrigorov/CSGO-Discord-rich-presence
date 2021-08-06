@@ -1,5 +1,5 @@
 # CS:GO Discord rich presence
-### Fetures
+### Features
 
 **This is 100% VAC Secure**, it's using [official Game State Integration](https://developer.valvesoftware.com/wiki/Counter-Strike:_Global_Offensive_Game_State_Integration).
 
@@ -45,5 +45,11 @@ You have to have installed Nodejs and NPM.
     }
     ```
     Using this values should be fine, but you can use your own.
+    
+    richOutput - something as debug/verbose mode
+    port - it needs to be same as in csgo config file
+    clientId - Discord application client ID
+    host - where to listen on
+    
  4. run `npm install`
  5. run `npm start`
